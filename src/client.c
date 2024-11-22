@@ -17,6 +17,7 @@ void send_char(int server_pid, char c) {
 				return;
 			}
 		}
+		usleep(100);
         printf("%d", sig);
 		i--;
 	}
