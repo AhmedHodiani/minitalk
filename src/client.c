@@ -1,50 +1,58 @@
-# include "../include/minitalk.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ataher <ataher@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/26 19:05:12 by ataher            #+#    #+#             */
+/*   Updated: 2024/11/26 22:05:21 by ataher           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void send_char(int server_pid, char c) {
-    unsigned char ascii_value = (unsigned char)c;
+#include "../include/minitalk.h"
 
-	int i = 6;
-	while (i >= 0) {
-		int sig = (ascii_value >> i) & 1;
-		if (sig == 1) {
-			if (kill(server_pid, SIGUSR1) == -1) {
-				ft_printf("Failed to send signal");
-				return;
-			}
-		} else {
-			if (kill(server_pid, SIGUSR2) == -1) {
-				ft_printf("Failed to send signal");
-				return;
-			}
-		}
-		usleep(100);
-        printf("%d", sig);
-		i--;
+static void	client_handler(int sig)
+{
+	if (sig == SIGUSR2)
+	{
+		bugger_box("Server affirmed reception of the full message");
+		exit(EXIT_SUCCESS);
 	}
-	printf("\n");
 }
 
-int main(int argc, char **argv) {
-	if (argc != 3) {
-		ft_printf("Usage: %s <server_pid> <message>\n", argv[0]);
-		return 1;
-	}
-	int server_pid = ft_atoi(argv[1]);
-	char *message = argv[2];
+static void	client_send_message(int server_pid, char *str)
+{
+	int	i;
 
-	ft_printf("SERVER PID: %d\n", server_pid);
-	// ft_printf("MESSAGE: %s\n", message);
+	bugger_cmd("Sending message length (int): %d", ft_strlen(str));
+	send_int(server_pid, ft_strlen(str));
+	bugger_cmd("Sending message...");
+	i = 0;
+	while (str[i] != '\0')
+		send_char(server_pid, str[i++]);
+	bugger_cmd("Sending null terminator..."); 
+	send_char(server_pid, '\0');
+}
 
-	int i = 0;
-	while (message[i]) {
-		printf("sending %c\n", message[i]);
-		send_char(server_pid, message[i]);
-		i++;
+int main(int argc, char **argv)
+{
+    struct sigaction	s_client;
+
+    if (argc != 3)
+    {
+        bugger_info("Usage: %s <server_pid> <message>", argv[0]);
+        return (EXIT_FAILURE);
+    }
+	else if (kill(ft_atoi(argv[1]), 0) < 0)
+	{
+		bugger_error("PID is invalid");
+		return (EXIT_FAILURE);
 	}
-	// send_char(server_pid, message[i]);
-	// if (kill(server_pid, SIGUSR1) == -1) {
-	// 	ft_printf("Failed to send signal");
-	// 	return 1;
-	// }
-	return 0;
+	sigemptyset(&s_client.sa_mask);
+	s_client.sa_flags = SA_RESTART;
+	s_client.sa_handler = client_handler;
+	config_signals(&s_client);
+    client_send_message(ft_atoi(argv[1]), argv[2]);
+    return (EXIT_SUCCESS);
 }

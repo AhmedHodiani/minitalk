@@ -9,8 +9,8 @@ LIBFT			= ft
 LIBFT_ARCHIVE	= libft.a
 LIBFT_DIR		= libft
 
-SERVER_SRC = src/server.c
-CLIENT_SRC = src/client.c
+SERVER_SRC = src/server.c src/talker.c
+CLIENT_SRC = src/client.c src/talker.c
 
 all: $(LIBFT_ARCHIVE) $(SERVER) $(CLIENT)
 
