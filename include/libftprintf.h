@@ -6,7 +6,7 @@
 /*   By: ataher <ataher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 10:35:43 by ataher            #+#    #+#             */
-/*   Updated: 2025/01/04 01:25:12 by ataher           ###   ########.fr       */
+/*   Updated: 2025/01/04 01:53:31 by ataher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,9 @@
 # define BRIGHT_WHITE "\033[97m"
 
 int		ft_printf(const char *format, ...);
-int		hp_printf(char format, va_list inputs);
-void	ft_printf_strings(char **strings);
+int		ft_dprintf(int fd, const char *format, ...);
+
+int		hp_printf(int fd, char format, va_list inputs);
 int		ft_putaddress_fd(void *address, int fd);
 int		ft_putnbr_fd(int n, int fd);
 int		ft_putstr_fd(char *s, int fd);
