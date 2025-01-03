@@ -6,7 +6,7 @@
 /*   By: ataher <ataher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 19:05:12 by ataher            #+#    #+#             */
-/*   Updated: 2024/11/26 22:05:21 by ataher           ###   ########.fr       */
+/*   Updated: 2025/01/04 01:27:31 by ataher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,19 +31,19 @@ static void	client_send_message(int server_pid, char *str)
 	i = 0;
 	while (str[i] != '\0')
 		send_char(server_pid, str[i++]);
-	bugger_cmd("Sending null terminator..."); 
+	bugger_cmd("Sending null terminator...");
 	send_char(server_pid, '\0');
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-    struct sigaction	s_client;
+	struct sigaction	s_client;
 
-    if (argc != 3)
-    {
-        bugger_info("Usage: %s <server_pid> <message>", argv[0]);
-        return (EXIT_FAILURE);
-    }
+	if (argc != 3)
+	{
+		bugger_info("Usage: %s <server_pid> <message>", argv[0]);
+		return (EXIT_FAILURE);
+	}
 	else if (kill(ft_atoi(argv[1]), 0) < 0)
 	{
 		bugger_error("PID is invalid");
@@ -53,6 +53,6 @@ int main(int argc, char **argv)
 	s_client.sa_flags = SA_RESTART;
 	s_client.sa_handler = client_handler;
 	config_signals(&s_client);
-    client_send_message(ft_atoi(argv[1]), argv[2]);
-    return (EXIT_SUCCESS);
+	client_send_message(ft_atoi(argv[1]), argv[2]);
+	return (EXIT_SUCCESS);
 }

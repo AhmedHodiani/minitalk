@@ -1,0 +1,6 @@
+[submodule "dependencies/libft"]
+	path = dependencies/libft
+	url = git@github.com:AhmedHodiani/libft.git
+[submodule "dependencies/libftprintf"]
+	path = dependencies/libftprintf
+	url = git@github.com:AhmedHodiani/libftprintf.git
